@@ -28,7 +28,8 @@ module.exports = {
         "semi": true,
         "singleQuote": false,
         "bracketSpacing": false,
-        "arrowParens": "always"
+        "arrowParens": "always",
+        "endOfLine":"auto"
       }
     ],
     "import/order": ["warn", {"newlines-between": "always"}]
