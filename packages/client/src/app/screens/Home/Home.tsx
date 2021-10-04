@@ -25,15 +25,16 @@ const Home: React.FC = () => {
 
     if (!userNew) return;
     socket.emit("addvote", {product: key, user: userNew, comment: commentNew} as Vote);
-    setVotes((votes) => votes.map((vote) => {
-        if (vote.user === userNew) {
-          vote.comment = commentNew || "";
-          vote.product = key;
+    const newV = votes.map((vote) => {
+      if (vote.user === userNew) {
+        vote.comment = commentNew || "";
+        vote.product = key;
 
-          return vote;
-        } else return vote;
-      }),
-    );
+        return vote;
+      } else return vote;
+    });
+
+    setVotes(newV);
     console.log("Agregado de voto");
   };
 
@@ -90,52 +91,54 @@ const Home: React.FC = () => {
         </h1>
         <h3>Lets get this party started</h3>
       </header>
-
-      <div className={styles.productsGrid}>
-        {products.length ? (
-          products.map((product) => (
-            <div key={product.key} className={styles.border}>
-              <div className={styles.product} onClick={() => addVote(product.key)}>
-                <div>
-                  <h2>{product.name}</h2>
-                  <p>{product.description}</p>
-                  <img alt="imagenProd" className={styles.prodImage} src={product.image} />
-                </div>
-                <div className={styles.votesDiv}>
-                  <span>
-                    {votes.filter((votes) => votes.product === product.key).length} voto(s)
-                  </span>
-                  <div className={styles.divAllVotes}>
-                    {votes
-                      .filter((vote) => vote.product === product.key)
-                      .map(
-                        (vote) =>
-                          vote.comment && (
-                            <div className={styles.userVote}>
-                              <span>{vote.user}: </span>
-                              <p>{vote.comment}</p>
-                            </div>
-                          ),
-                      )}
+      <>
+        <div className={styles.productsGrid}>
+          {products.length ? (
+            products.map((product) => (
+              <div key={product.key} className={styles.border}>
+                <div className={styles.product} onClick={() => addVote(product.key)}>
+                  <div>
+                    <h2>{product.name}</h2>
+                    <p>{product.description}</p>
+                    <img alt="imagenProd" className={styles.prodImage} src={product.image} />
+                  </div>
+                  <div className={styles.votesDiv}>
+                    <span>
+                      {votes.filter((votes) => votes.product === product.key).length} voto(s)
+                    </span>
+                    <div className={styles.divAllVotes}>
+                      {votes
+                        .filter((vote) => vote.product === product.key)
+                        .map(
+                          (vote) =>
+                            vote.comment && (
+                              <div className={styles.userVote}>
+                                <span>{vote.user}: </span>
+                                <p>{vote.comment}</p>
+                              </div>
+                            ),
+                        )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <h3>Cargando...</h3>
-        )}
-      </div>
-      <footer>
-        {state === "connected" ? (
-          <h3 onClick={() => changeConnection("disconnect")}>Parar votacion</h3>
-        ) : state === "disconnected" ? (
-          <h3 onClick={() => changeConnection("connect")}>Reanudar votacion</h3>
-        ) : (
-          <h6>cargando..</h6>
-        )}
-        <h3 onClick={() => changeConnection("finish")}>Finalizar votacion</h3>
-      </footer>
+            ))
+          ) : (
+            <h3>Cargando...</h3>
+          )}
+        </div>
+        <footer>
+          {state === "connected" ? (
+            <h3 onClick={() => changeConnection("disconnect")}>Parar votacion</h3>
+          ) : state === "disconnected" ? (
+            <h3 onClick={() => changeConnection("connect")}>Reanudar votacion</h3>
+          ) : (
+            <h6>cargando..</h6>
+          )}
+          <h3 onClick={() => changeConnection("finish")}>Finalizar votacion</h3>
+        </footer>
+      </>
+      )
     </main>
   );
 };

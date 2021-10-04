@@ -25,7 +25,7 @@ server.on("connection", (socket) => {
 server.on("connection", (socket) => {
   socket.on("finish", (arg: Vote[]) => {
     votes = arg;
-    socket.broadcast.emit("finish", {products, votes: arg});
+    socket.broadcast.emit("finish", {products, votes});
     console.log("Fin VOTE");
   });
 });
