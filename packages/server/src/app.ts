@@ -1,7 +1,7 @@
 import * as io from "socket.io";
 
 import {product0, product1, vote0, vote1, vote2} from "./data";
-import {Product, Vote} from "./types";
+import {DataServer, Product, Vote} from "./types";
 
 const server = new io.Server(5000, {
   cors: {
@@ -14,10 +14,10 @@ var votes: Vote[] = [vote0, vote1, vote2];
 server.on("connection", (socket) => {
   socket.on("addvote", (arg: Vote) => {
     const v = votes.filter((vote) => vote.user === arg.user);
-    v.length
+    v[0]
       ? ((v[0].product = arg.product), (v[0].comment = arg.comment))
       : votes.push({user: arg.user, comment: arg.comment, product: arg.product} as Vote);
-    socket.broadcast.emit("addvote", {products, votes});
+    socket.broadcast.emit("state", {products: products, votes: votes} as DataServer);
     console.log("Subida de voto");
   });
 });
@@ -25,7 +25,7 @@ server.on("connection", (socket) => {
 server.on("connection", (socket) => {
   socket.on("finish", (arg: Vote[]) => {
     votes = arg;
-    socket.broadcast.emit("finish", {products, votes});
+    socket.broadcast.emit("state", {products, votes});
     console.log("Fin VOTE");
   });
 });

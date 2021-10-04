@@ -10,3 +10,8 @@ export interface Vote {
   user: string;
   comment?: string;
 }
+
+export interface DataServer {
+  products: Product[];
+  votes: Vote[];
+}
